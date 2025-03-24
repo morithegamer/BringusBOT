@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 import os
@@ -24,6 +23,7 @@ async def on_message(message):
     if message.mentions:
         pingjar.add_ping_fine(message.author.id)
         balance = pingjar.get_user_balance(message.author.id)
+        total = pingjar.get_total_debt()
 
         try:
             await message.author.send(
@@ -31,6 +31,9 @@ async def on_message(message):
             )
         except discord.Forbidden:
             print(f"Couldn't DM {message.author} — DMs may be off.")
+
+        # 🔁 Update status with latest total
+        await bot.change_presence(activity=discord.Game(name=f"Ping Jar - ${total} collected 💸"))
 
     await bot.process_commands(message)
 
