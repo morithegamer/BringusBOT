@@ -22,10 +22,9 @@ class VerifyView(discord.ui.View):
 
         self.cooldowns[user_id] = now
 
-        await interaction.response.send_message("🔍 Let's begin your verification. Please answer the following:", ephemeral=True)
+        await interaction.response.send_message("🔍 Let's begin your verification. Please answer:", ephemeral=True)
 
         try:
-            # Age Check
             await interaction.channel.typing()
             await asyncio.sleep(1)
             await interaction.followup.send("1️⃣ What is your age?", ephemeral=True)
@@ -36,7 +35,6 @@ class VerifyView(discord.ui.View):
                 await interaction.followup.send("❌ You must be 18+ to access After Hours.", ephemeral=True)
                 return
 
-            # Consent Check
             await interaction.channel.typing()
             await asyncio.sleep(1)
             await interaction.followup.send("2️⃣ Do you consent to mature discussions? (yes/no)", ephemeral=True)
@@ -47,17 +45,15 @@ class VerifyView(discord.ui.View):
                 await interaction.followup.send("❌ Consent not given. Verification cancelled.", ephemeral=True)
                 return
 
-            # Grant Role
             role = discord.utils.get(interaction.guild.roles, id=715933446790185062)
             if role:
                 await interaction.user.add_roles(role)
-                await interaction.followup.send("✅ Verification complete! Welcome to the After Hours.", ephemeral=True)
-
+                await interaction.followup.send("✅ Verification complete! Welcome to After Hours.", ephemeral=True)
                 log_channel = discord.utils.get(interaction.guild.text_channels, id=1365925137467183124)
                 if log_channel:
-                    await log_channel.send(f"✅ {interaction.user.mention} has verified for After Hours access.")
+                    await log_channel.send(f"✅ {interaction.user.mention} verified for After Hours access!")
             else:
-                await interaction.followup.send("⚠️ 'After Hours' role not found. Please contact staff.", ephemeral=True)
+                await interaction.followup.send("⚠️ 'After Hours' role not found. Contact staff.", ephemeral=True)
 
         except Exception as e:
             await interaction.followup.send("❌ Verification failed or timed out.", ephemeral=True)
@@ -90,7 +86,7 @@ class BringusVerify(commands.Cog):
                 color=0x1F1E33
             )
             embed.set_footer(text="Your journey into the After Hours begins here. 🎴")
-            embed.set_image(url="https://i.imgur.com/8sfRdbP.jpeg")  # Velvet image hosted
+            embed.set_image(url="https://i.imgur.com/8sfRdbP.jpeg")
             await channel.send(embed=embed, view=VerifyView())
             await interaction.response.send_message("✅ Verification embed posted successfully!", ephemeral=True)
 
