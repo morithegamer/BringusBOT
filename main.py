@@ -13,7 +13,6 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 async def on_ready():
     print(f"Logged in as {bot.user}")
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Velvet Travelers arrive..."))
-    await bot.tree.sync()
     from cogs.bringus_verify import VerifyView
     bot.add_view(VerifyView())
 
