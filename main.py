@@ -19,4 +19,4 @@ async def on_ready():
         if filename.endswith('.py'):
             await bot.load_extension(f'cogs.{filename[:-3]}')
 
-bot.run("YOUR_TOKEN_HERE")
+bot.run("MTM0NjI1MTQ1NTc2NTU0OTEzOA.GvAIcI.S-zhk5fQyt2QRv-EjgWJF88r-mtNeYABg2xtEk")
