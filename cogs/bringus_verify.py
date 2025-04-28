@@ -1,4 +1,4 @@
-# Velvet Room Verification System (NSFW After Hours)
+# Velvet Room Verification System (NSFW After Hours) with Slash Commands
 import discord
 from discord.ext import commands
 from discord import app_commands
@@ -70,13 +70,29 @@ class BringusVerify(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.wait_until_ready()
+        try:
+            synced = await self.bot.tree.sync()
+            print(f"Synced {len(synced)} command(s).")
+        except Exception as e:
+            print(e)
+
+    @app_commands.command(name="postverify", description="Post the Velvet Room Verification Embed and Button.")
+    async def postverify(self, interaction: discord.Interaction):
+        if not interaction.user.guild_permissions.administrator:
+            await interaction.response.send_message("❌ You don't have permission to use this command.", ephemeral=True)
+            return
+
         channel = self.bot.get_channel(1366264816855027782)
         if channel:
-            embed = discord.Embed(title="🎴 Welcome to the Velvet Room: After Hours", description="Step forward if you wish to cross into the After Hours. Verification ensures safety and respect within these walls.", color=0x1F1E33)
+            embed = discord.Embed(
+                title="🎴 Welcome to the Velvet Room: After Hours",
+                description="Step forward if you wish to cross into the After Hours. Verification ensures safety and respect within these walls.",
+                color=0x1F1E33
+            )
             embed.set_footer(text="Your journey into the After Hours begins here. 🎴")
-            embed.set_image(url="https://i.imgur.com/8sfRdbP.jpeg")  # A placeholder image hosting the velvet image
-            await channel.purge(limit=10)
+            embed.set_image(url="https://i.imgur.com/8sfRdbP.jpeg")  # Velvet image hosted
             await channel.send(embed=embed, view=VerifyView())
+            await interaction.response.send_message("✅ Verification embed posted successfully!", ephemeral=True)
 
 async def setup(bot):
     await bot.add_cog(BringusVerify(bot))
