@@ -37,23 +37,25 @@ async def load_cogs():
 
 @bot.event
 async def on_ready():
+    print(f"[Bringus] Logged in as {bot.user}")
+
     # Set random status
     selected_status = random.choice(status_options)
     await bot.change_presence(status=discord.Status.online, activity=selected_status)
-    print(f"[Bringus] Logged in as {bot.user} | Status: {selected_status.name}")
+    print(f"[Bringus] Status set to: {selected_status.name}")
+
+    # AFTER bot is ready, sync slash commands
+    try:
+        guild_id = 555148516708712479  # Your real server ID
+        synced = await bot.tree.sync(guild=discord.Object(id=guild_id))
+        print(f"[Bringus] Synced {len(synced)} slash commands to your server.")
+    except Exception as e:
+        print(f"[Bringus] Failed to sync slash commands: {e}")
 
 async def main():
     async with bot:
         await load_cogs()
-
-        # AFTER cogs are loaded, sync slash commands
-        try:
-            guild_id = 555148516708712479  # Your real server ID
-            synced = await bot.tree.sync(guild=discord.Object(id=guild_id))
-            print(f"[Bringus] Synced {len(synced)} slash commands to your server.")
-        except Exception as e:
-            print(f"[Bringus] Failed to sync slash commands: {e}")
-
         await bot.start(TOKEN)
 
 asyncio.run(main())
+
