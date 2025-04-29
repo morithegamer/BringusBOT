@@ -3,15 +3,18 @@ from discord.ext import commands
 from discord import app_commands
 import random
 import aiohttp
+import json
 
 class BringusCounting(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.counting_channel_id = 1366535062765699103
-        self.webhook_url = "https://discord.com/api/webhooks/1366526376647069857/HO3w2th_OWUrxAMS_dL14S9t_ClPuZyNnb4FtuZBAjpu_RT8_dXigFReeBzVyjGFlyoi"
+        with open('config.json', 'r') as f:
+            config = json.load(f)
+        self.counting_channel_id = config["counting_channel_id"]
+        self.webhook_url = config["webhook_url"]
+        self.lives = config["starting_lives"]
         self.current_number = 1
         self.last_user_id = None
-        self.lives = 3
 
         self.special_numbers = {
             42: ["The answer to Optical Media confusion."],
