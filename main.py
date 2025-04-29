@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 import os
+import random
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -20,7 +21,18 @@ async def on_ready():
         print(f"[Bringus] Synced {len(synced)} slash commands to your server!")
     except Exception as e:
         print(f"[Bringus] Sync error: {e}")
-    print(f"[Bringus] Logged in as {bot.user}")
+
+    statuses = [
+        discord.Game(name="Counting memes! 🤖"),
+        discord.Game(name="Watching the Velvet Room visitors... 💎"),
+        discord.Activity(type=discord.ActivityType.watching, name="the fate of memers"),
+        discord.Activity(type=discord.ActivityType.listening, name="the whispers of Persona users ✨")
+    ]
+
+    selected_status = random.choice(statuses)
+    await bot.change_presence(status=discord.Status.online, activity=selected_status)
+
+    print(f"[Bringus] Logged in as {bot.user} | Current Status: {selected_status.name}")
 
 async def load():
     for filename in os.listdir('./cogs'):
@@ -30,3 +42,4 @@ async def load():
 asyncio.run(load())
 
 bot.run(TOKEN)
+
