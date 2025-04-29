@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 from discord import app_commands, Interaction
@@ -18,6 +17,4 @@ class BringusMemes(commands.Cog):
         await interaction.response.send_message(random.choice(memes))
 
 async def setup(bot):
-    cog = BringusMemes(bot)
-    await bot.add_cog(cog)
-    bot.tree.add_command(cog.meme)
+    await bot.add_cog(BringusMemes(bot))

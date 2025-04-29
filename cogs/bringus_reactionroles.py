@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 from discord import app_commands, Interaction
@@ -12,6 +11,4 @@ class BringusReactionRoles(commands.Cog):
         await interaction.response.send_message("🔧 Reaction role system is under construction.", ephemeral=True)
 
 async def setup(bot):
-    cog = BringusReactionRoles(bot)
-    await bot.add_cog(cog)
-    bot.tree.add_command(cog.reactionrole)
+    await bot.add_cog(BringusReactionRoles(bot))

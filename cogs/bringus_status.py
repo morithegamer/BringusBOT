@@ -1,3 +1,4 @@
+
 import discord
 from discord.ext import commands
 from discord import app_commands, Interaction
@@ -34,6 +35,4 @@ class BringusStatus(commands.Cog):
             print(f"[Status Command Error] {e}")
 
 async def setup(bot):
-    cog = BringusStatus(bot)
-    await bot.add_cog(cog)
-    bot.tree.add_command(cog.status)
+    await bot.add_cog(BringusStatus(bot))

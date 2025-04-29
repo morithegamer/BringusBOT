@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 from discord import app_commands, Interaction
@@ -15,6 +14,4 @@ class BringusXP(commands.Cog):
         await interaction.response.send_message(f"⭐ You have {xp} XP!", ephemeral=True)
 
 async def setup(bot):
-    cog = BringusXP(bot)
-    await bot.add_cog(cog)
-    bot.tree.add_command(cog.rank)
+    await bot.add_cog(BringusXP(bot))
