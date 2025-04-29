@@ -57,7 +57,12 @@ class BringusCounting(commands.Cog):
 
     @app_commands.command(name="lifes", description="Show current lives and number.")
     async def lifes(self, interaction: discord.Interaction):
-        embed = discord.Embed(title="🧮 Counting Progress", description=f"**Lives:** {self.lives}\n**Number:** {self.current_number}", color=0x1F1E33)
+        embed = discord.Embed(
+            title="🧮 Counting Progress",
+            description=f"**Lives:** {self.lives}
+**Number:** {self.current_number}",
+            color=0x1F1E33
+        )
         await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
