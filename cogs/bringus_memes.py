@@ -19,4 +19,4 @@ class BringusMemes(commands.Cog):
         await interaction.response.send_message(selected_meme)
 
 async def setup(bot: commands.Bot):
-    await bot.load_extension(f'cogs.{filename[:-3]}')
+    await bot.add_cog(BringusMemes(bot))
