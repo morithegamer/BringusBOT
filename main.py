@@ -52,10 +52,17 @@ async def on_ready():
 async def load_cogs():
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
-            await bot.load_extension(f"cogs.{filename[:-3]}")
-            print(f"[Bringus] Loaded cog: {filename}")
+            cog_name = filename[:-3]
+            try:
+                await bot.load_extension(f"cogs.{cog_name}")
+                print(f"[Bringus] Loaded cog: {cog_name}")
+            except Exception as e:
+                print(f"[Bringus] Failed to load cog {cog_name}: {e}")
 
-asyncio.run(load_cogs())
+# Actually start loading everything
+async def main():
+    async with bot:
+        await load_cogs()
+        await bot.start(TOKEN)
 
-# Run bot
-bot.run(TOKEN)
+asyncio.run(main())
