@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import asyncio
 import os
-import json
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -10,8 +9,9 @@ intents.members = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-with open('config.json') as f:
-    config = json.load(f)
+TOKEN = os.getenv("TOKEN")
+PUBLIC_WEBHOOK = os.getenv("PUBLIC_WEBHOOK")
+STAFF_WEBHOOK = os.getenv("STAFF_WEBHOOK")
 
 @bot.event
 async def on_ready():
@@ -29,4 +29,4 @@ async def load():
 
 asyncio.run(load())
 
-bot.run(config['token'])
+bot.run(TOKEN)
