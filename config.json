@@ -1,5 +1,5 @@
 {
-    "bot_token": "MTM0NjI1MTQ1NTc2NTU0OTEzOA.GvAIcI.S-zhk5fQyt2QRv-EjgWJF88r-mtNeYABg2xtEk",
-    "after_hours_role_id": "715933446790185062",
-    "verified_log_channel_id": "1365925137467183124"
+    "counting_channel_id": 1366535062765699103,
+    "webhook_url": "https://discord.com/api/webhooks/1366526376647069857/HO3w2th_OWUrxAMS_dL14S9t_ClPuZyNnb4FtuZBAjpu_RT8_dXigFReeBzVyjGFlyoi",
+    "starting_lives": 3
 }
