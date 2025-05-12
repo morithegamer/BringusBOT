@@ -70,9 +70,10 @@ class BringusVerify(commands.Cog):
                 description="Step forward if you wish to cross into After Hours.",
                 color=0x1F1E33
             )
-            embed.set_image(url="attachment://5f43869f-9912-4c3f-a5e5-03a55729413b.png")
+            file = discord.File("image.png", filename="image.png")
+            embed.set_image(url="attachment://image.png")
             await channel.purge(limit=10)
-            await channel.send(embed=embed, view=VerifyView())
+            await channel.send(embed=embed, view=VerifyView(), file=file)
 
 async def setup(bot):
     await bot.add_cog(BringusVerify(bot))
