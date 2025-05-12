@@ -18,41 +18,26 @@ class VerifyView(discord.ui.View):
             return
 
         self.cooldowns[user_id] = now
-        await interaction.response.defer(ephemeral=True)
+        await interaction.response.send_message("🔍 Let's begin verification!", ephemeral=True)
+
+        await asyncio.sleep(1)
+        await interaction.followup.send("1️⃣ Please enter your Date of Birth (MM/DD/YYYY):", ephemeral=True)
+        dob_msg = await interaction.client.wait_for('message', check=lambda m: m.author.id == user_id, timeout=120)
+        dob_str = dob_msg.content.strip()
+        await dob_msg.delete()
 
         try:
-            await interaction.followup.send("🔍 Let's begin verification!", ephemeral=True)
-            await asyncio.sleep(1)
-            await interaction.followup.send("1️⃣ Please enter your Date of Birth (MM/DD/YYYY):", ephemeral=True)
-            dob_msg = await interaction.client.wait_for('message', check=lambda m: m.author.id == user_id, timeout=120)
-            dob_str = dob_msg.content.strip()
-            await dob_msg.delete()
+            dob = datetime.strptime(dob_str, "%m/%d/%Y")
+            age = (datetime.utcnow() - dob).days // 365
+        except ValueError:
+            await interaction.followup.send("❌ Invalid date format. Please use MM/DD/YYYY.", ephemeral=True)
+            return
 
-            try:
-                dob = datetime.strptime(dob_str, "%m/%d/%Y")
-                age = (datetime.utcnow() - dob).days // 365
-            except ValueError:
-                await interaction.followup.send("❌ Invalid date format. Please use MM/DD/YYYY.", ephemeral=True)
-                return
+        if age < 18:
+            await interaction.followup.send("❌ You must be 18+ to access After Hours.", ephemeral=True)
+            return
 
-            if age < 18:
-                await interaction.followup.send("❌ You must be 18+ to access After Hours.", ephemeral=True)
-                return
-
-            await interaction.followup.send("✅ Verified! Welcome to After Hours.", ephemeral=True)
-
-            role = discord.utils.get(interaction.guild.roles, id=715933446790185062)
-            if role:
-                await interaction.user.add_roles(role)
-                log_channel = discord.utils.get(interaction.guild.text_channels, id=1365925137467183124)
-                if log_channel:
-                    await log_channel.send(f"✅ {interaction.user.mention} has verified with DOB: {dob_str}.")
-            else:
-                await interaction.followup.send("⚠️ 'After Hours' role not found.", ephemeral=True)
-
-        except Exception as e:
-            await interaction.followup.send("❌ Verification failed or timed out.", ephemeral=True)
-            print(e)
+        await interaction.followup.send("✅ Verified! Welcome to After Hours.", ephemeral=True)
 
 class BringusVerify(commands.Cog):
     def __init__(self, bot):
@@ -60,7 +45,7 @@ class BringusVerify(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.bot.wait_until_ready()
+        print("✅ Bringus Verification System is ready!")
         channel = self.bot.get_channel(1366264816855027782)
         if channel:
             embed = discord.Embed(
@@ -68,10 +53,7 @@ class BringusVerify(commands.Cog):
                 description="Step forward if you wish to cross into After Hours.",
                 color=0x1F1E33
             )
-            file = discord.File("image.png", filename="image.png")
-            embed.set_image(url="attachment://image.png")
-            await channel.purge(limit=10)
-            await channel.send(embed=embed, view=VerifyView(), file=file)
+            await channel.send(embed=embed, view=VerifyView())
 
 async def setup(bot):
     await bot.add_cog(BringusVerify(bot))
