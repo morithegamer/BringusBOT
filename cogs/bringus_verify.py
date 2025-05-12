@@ -1,8 +1,8 @@
-
 import discord
 from discord.ext import commands
 from discord import app_commands
 import asyncio
+from datetime import datetime
 
 class VerifyView(discord.ui.View):
     def __init__(self):
@@ -23,10 +23,17 @@ class VerifyView(discord.ui.View):
         try:
             await interaction.channel.typing()
             await asyncio.sleep(1)
-            await interaction.followup.send("1️⃣ What is your age?", ephemeral=True)
-            age_msg = await interaction.client.wait_for('message', check=lambda m: m.author.id == user_id, timeout=120)
-            age = int(age_msg.content)
-            await age_msg.delete()
+            await interaction.followup.send("1️⃣ Please enter your Date of Birth (MM/DD/YYYY):", ephemeral=True)
+            dob_msg = await interaction.client.wait_for('message', check=lambda m: m.author.id == user_id, timeout=120)
+            dob_str = dob_msg.content.strip()
+            await dob_msg.delete()
+
+            try:
+                dob = datetime.strptime(dob_str, "%m/%d/%Y")
+                age = (datetime.utcnow() - dob).days // 365
+            except ValueError:
+                await interaction.followup.send("❌ Invalid date format. Please use MM/DD/YYYY.", ephemeral=True)
+                return
 
             if age < 18:
                 await interaction.followup.send("❌ You must be 18+ to access After Hours.", ephemeral=True)
@@ -34,22 +41,14 @@ class VerifyView(discord.ui.View):
 
             await interaction.channel.typing()
             await asyncio.sleep(1)
-            await interaction.followup.send("2️⃣ Do you consent to mature discussions? (yes/no)", ephemeral=True)
-            consent_msg = await interaction.client.wait_for('message', check=lambda m: m.author.id == user_id, timeout=120)
-            consent = consent_msg.content.lower()
-            await consent_msg.delete()
-
-            if consent not in ["yes", "y"]:
-                await interaction.followup.send("❌ Consent not given.", ephemeral=True)
-                return
+            await interaction.followup.send("✅ Verified! Welcome to After Hours.", ephemeral=True)
 
             role = discord.utils.get(interaction.guild.roles, id=715933446790185062)
             if role:
                 await interaction.user.add_roles(role)
-                await interaction.followup.send("✅ Verified! Welcome to After Hours.", ephemeral=True)
                 log_channel = discord.utils.get(interaction.guild.text_channels, id=1365925137467183124)
                 if log_channel:
-                    await log_channel.send(f"✅ {interaction.user.mention} has verified.")
+                    await log_channel.send(f"✅ {interaction.user.mention} has verified with DOB: {dob_str}.")
             else:
                 await interaction.followup.send("⚠️ 'After Hours' role not found.", ephemeral=True)
 
@@ -71,7 +70,7 @@ class BringusVerify(commands.Cog):
                 description="Step forward if you wish to cross into After Hours.",
                 color=0x1F1E33
             )
-            embed.set_image(url="https://i.imgur.com/qYjzKyy.png")
+            embed.set_image(url="attachment://5f43869f-9912-4c3f-a5e5-03a55729413b.png")
             await channel.purge(limit=10)
             await channel.send(embed=embed, view=VerifyView())
 
