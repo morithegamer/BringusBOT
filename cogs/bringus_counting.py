@@ -12,6 +12,7 @@ class BringusCounting(commands.Cog):
         self.current_number = 1
         self.last_user_id = None
         self.lives = 3
+        self.consecutive_count = 0
         self.special_numbers = {
             42: ["The answer to Optical Media confusion."],
             69: ["Nice. Very optical. Very media."],
@@ -29,12 +30,19 @@ class BringusCounting(commands.Cog):
             return
 
         number = int(content)
+        
         if message.author.id == self.last_user_id:
-            await message.channel.send("❌ You cannot count twice in a row! Lives Remaining: " + str(self.lives))
-            return
+            self.consecutive_count += 1
+            if self.consecutive_count > 2:
+                await message.channel.send("❌ You cannot count more than twice in a row! Lives Remaining: " + str(self.lives))
+                await message.add_reaction("❌")
+                return
+        else:
+            self.consecutive_count = 1
 
         if number != self.current_number:
             self.lives -= 1
+            await message.add_reaction("❌")
             if self.lives <= 0:
                 await message.channel.send("⚠️ Lives depleted! Resetting count...")
                 self.current_number = 1
@@ -45,6 +53,7 @@ class BringusCounting(commands.Cog):
 
         self.last_user_id = message.author.id
         self.current_number += 1
+        await message.add_reaction("✅")
 
         if number in self.special_numbers:
             quote = random.choice(self.special_numbers[number])
@@ -53,17 +62,15 @@ class BringusCounting(commands.Cog):
     async def send_webhook(self, content):
         async with aiohttp.ClientSession() as session:
             webhook = discord.Webhook.from_url(self.webhook_url, session=session)
-            await webhook.send(content="**Jon (Bringus) says:** \"" + content + "\"", username="Jon (Bringus)")
+            await webhook.send(content="**Jon (Bringus) says:** "" + content + """, username="Jon (Bringus)")
 
     @app_commands.command(name="lifes", description="Show current lives and number.")
     async def lifes(self, interaction: discord.Interaction):
-        msg = "**Lives:** " + str(self.lives) + "\\n**Number:** " + str(self.current_number)
         embed = discord.Embed(
             title="🧮 Counting Progress",
-            description="**Lives:** " + str(self.lives) + "\\n**Number:** " + str(self.current_number),
+            description=f"**Lives:** {self.lives}\n**Number:** {self.current_number}",
             color=0x1F1E33
         )
-        embed.description = "**Lives:** " + str(self.lives) + "\n**Number:** " + str(self.current_number)
         await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
