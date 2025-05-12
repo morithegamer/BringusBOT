@@ -18,10 +18,10 @@ class VerifyView(discord.ui.View):
             return
 
         self.cooldowns[user_id] = now
-        await interaction.response.send_message("🔍 Let's begin verification!", ephemeral=True)
+        await interaction.response.defer(ephemeral=True)
 
         try:
-            await interaction.channel.typing()
+            await interaction.followup.send("🔍 Let's begin verification!", ephemeral=True)
             await asyncio.sleep(1)
             await interaction.followup.send("1️⃣ Please enter your Date of Birth (MM/DD/YYYY):", ephemeral=True)
             dob_msg = await interaction.client.wait_for('message', check=lambda m: m.author.id == user_id, timeout=120)
@@ -39,8 +39,6 @@ class VerifyView(discord.ui.View):
                 await interaction.followup.send("❌ You must be 18+ to access After Hours.", ephemeral=True)
                 return
 
-            await interaction.channel.typing()
-            await asyncio.sleep(1)
             await interaction.followup.send("✅ Verified! Welcome to After Hours.", ephemeral=True)
 
             role = discord.utils.get(interaction.guild.roles, id=715933446790185062)
@@ -77,3 +75,4 @@ class BringusVerify(commands.Cog):
 
 async def setup(bot):
     await bot.add_cog(BringusVerify(bot))
+
