@@ -1,4 +1,3 @@
-
 import discord
 from discord.ext import commands
 from discord import app_commands, Interaction
@@ -7,8 +6,8 @@ import aiohttp
 class BringusStatus(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.up_image_url = "https://i.imgur.com/N3XyUXa.png"
-        self.down_image_url = "https://i.imgur.com/UNduLJ0.png"
+        self.up_image_url = "https://i.imgur.com/N3XyUXa.png"  # Placeholder for UP image
+        self.down_image_url = "https://i.imgur.com/UNduLJ0.png"  # Placeholder for DOWN image
 
     @app_commands.command(name="status", description="Change Bringus profile picture to UP or DOWN mode.")
     @app_commands.describe(state="Choose 'up' or 'down'")
@@ -34,5 +33,5 @@ class BringusStatus(commands.Cog):
             await interaction.response.send_message("⚠️ Failed to update avatar.", ephemeral=True)
             print(f"[Status Command Error] {e}")
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
     await bot.add_cog(BringusStatus(bot))

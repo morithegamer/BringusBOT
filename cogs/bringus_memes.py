@@ -11,10 +11,12 @@ class BringusMemes(commands.Cog):
     async def meme(self, interaction: Interaction):
         memes = [
             "https://i.imgflip.com/30b1gx.jpg",
+            "https://i.imgflip.com/4/4t0m5.jpg",
             "https://i.imgflip.com/1bij.jpg",
-            "https://i.imgur.com/XRkU9Y1.jpeg"
+            "https://i.imgflip.com/3si4.jpg"
         ]
-        await interaction.response.send_message(random.choice(memes))
+        selected_meme = random.choice(memes)
+        await interaction.response.send_message(selected_meme)
 
-async def setup(bot):
+async def setup(bot: commands.Bot):
     await bot.add_cog(BringusMemes(bot))
