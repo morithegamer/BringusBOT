@@ -38,7 +38,7 @@ class TarotWithMode(commands.Cog):
         user_modes[interaction.user.id] = mode
         await interaction.response.send_message(f"Tarot mode set to **{mode}** for {interaction.user.display_name}.", ephemeral=True)
 
-    @app_commands.command(name="tarot", description="Draw a tarot card based on your selected mode.")
+    @app_commands.command(name="tarotmode", description="Draw a tarot card based on your selected mode.")
     async def tarot(self, interaction: discord.Interaction):
         mode = user_modes.get(interaction.user.id, "standard")
         await interaction.response.defer()

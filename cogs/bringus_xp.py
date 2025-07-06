@@ -127,7 +127,7 @@ async def setup(bot: commands.Bot):
     await bot.add_cog(BringusXP(bot))
 '''
 
-with open("/mnt/data/bringus_xp.py", "w") as f:
+with ("/mnt/data/bringus_xp.py", "w") as f:
     f.write(xp_module_code)
 
 "✅ Your enhanced XP cog with level tracking, milestone messages, and XP decay support has been written to `bringus_xp.py`!"
