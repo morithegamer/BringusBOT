@@ -1,6 +1,77 @@
+# Discord Bot & Async Stack
 discord.py>=2.3.2
 aiohttp
-openai
+discord-py-slash-command>=2.0.0
+
+# AI / OpenAI Integration
+openai>=1.0.0
 python-dotenv
+
+# E621 API
+e621==0.0.7
+
+# Reddit API
+asyncpraw>=7.7.1
+
+# Media & Requests
 requests
 Pillow
+
+# Web / API stack
+flask>=2.2.2
+flask-cors>=3.0.10
+flask-socketio>=5.3.2
+gunicorn>=20.1.0
+eventlet>=0.33.7
+
+# Redis stack (condensed)
+redis>=4.5.4
+
+
+# Celery stack
+celery>=5.3.0
+celery[redis]>=5.3.0
+
+# Database stack
+sqlalchemy>=1.4.47
+sqlalchemy-utils>=0.38.2
+alembic>=1.10.3
+
+# Other dependencies
+beautifulsoup4>=4.12.2
+lxml>=4.9.2
+html5lib>=1.1
+markdown>=3.4.1
+markdown2>=2.4.8
+python-dateutil>=2.8.2
+pytz>=2023.3
+pyyaml>=6.0
+jinja2>=3.1.2
+aiofiles>=23.1.0
+typing-extensions>=4.5.0
+psutil>=5.9.5
+
+# Miscellaneous
+colorama>=0.4.6
+tabulate>=0.9.0
+rich>=13.3.4
+# For testing
+pytest>=7.2.2
+pytest-asyncio>=0.20.3
+pytest-cov>=4.0.0
+pytest-mock>=3.10.0
+# For development
+black>=23.3.0
+isort>=5.10.1
+flake8>=5.0.4
+mypy>=0.991
+# For documentation
+sphinx>=5.3.0
+sphinx-rtd-theme>=1.0.0
+# For performance monitoring
+sentry-sdk>=1.10.0
+# For caching
+diskcache>=5.6.1
+# For background tasks
+celery>=5.3.0
+celery[redis]>=5.3.0    
