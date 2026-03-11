@@ -27,8 +27,8 @@ class RPAndHelp(commands.Cog):
         except Exception as e:
             await interaction.followup.send(f"🧨 Roleplay error: `{e}`")
 
-    @app_commands.command(name="fluxyhelp", description="Show help for Fluxy's AI features")
-    async def fluxyhelp(self, interaction: discord.Interaction):
+    @app_commands.command(name="fluxyhelps", description="Show help for Fluxy's AI features")
+    async def fluxyhelps(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="💫 Fluxy Help – AI Commands",
             description="Here's everything Fluxy can do for you!",

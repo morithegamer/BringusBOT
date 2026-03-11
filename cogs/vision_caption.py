@@ -21,5 +21,5 @@ class VisionCaption(commands.Cog):
         response = await describe_image(image_bytes, mood)
         await interaction.followup.send(f"👁️ **Jon (Bringus) sees...**\n> {response}")
 
-async def setup(bot: commands.Bot):
+async def setup(bot):
     await bot.add_cog(VisionCaption(bot))

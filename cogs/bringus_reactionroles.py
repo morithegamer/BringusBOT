@@ -13,12 +13,14 @@ class BringusReactionRoles(commands.Cog):
             description="React below to get your role!",
             color=0x7289DA
         )
-        message = await interaction.channel.send(embed=embed)
+        channel = interaction.channel
+        if isinstance(channel, discord.TextChannel):
+            message = await channel.send(embed=embed)
+            # Example: react with 🧠 to get a role
+            await message.add_reaction("🧠")
+            await interaction.response.send_message("✅ Reaction role message created!", ephemeral=True)
+        else:
+            await interaction.response.send_message("❌ This command can only be used in a text channel.", ephemeral=True)
 
-        # Example: react with 🧠 to get a role
-        await message.add_reaction("🧠")
-
-        await interaction.response.send_message("✅ Reaction role message created!", ephemeral=True)
-
-async def setup(bot: commands.Bot):
+async def setup(bot):
     await bot.add_cog(BringusReactionRoles(bot))

@@ -21,51 +21,65 @@ class VerifyView(discord.ui.View):
                 return
 
         self.cooldowns[user_id] = now
-
-        await interaction.response.send_message("🔍 Let's begin your verification. Please answer the following:", ephemeral=True)
-
+        # Start via DM (no personal documents or IDs collected)
         try:
-            # Age Check
-            await interaction.channel.typing()
-            await asyncio.sleep(1)
-            await interaction.followup.send("1️⃣ What is your age?", ephemeral=True)
-            age_msg = await interaction.client.wait_for('message', check=lambda m: m.author.id == user_id, timeout=120)
+            member: discord.Member = interaction.user if isinstance(interaction.user, discord.Member) else await interaction.guild.fetch_member(user_id)
+            dm = await member.create_dm()
+            await interaction.response.send_message("📨 Check your DMs to continue verification. If you didn't receive a DM, enable DMs from server members.", ephemeral=True)
 
-            try:
-                age = int(age_msg.content)
-            except ValueError:
-                await interaction.followup.send("❌ Invalid age format. Please enter a number.", ephemeral=True)
+            await dm.send("🔍 Let's begin your verification in private.")
+            await dm.send("⚠️ For your safety: Never share photos of your government ID or any personal documents. We will never ask for them.")
+            await dm.send("1️⃣ Are you 18 or older? (yes/no)")
+
+            def dm_check(m: discord.Message):
+                return m.author.id == user_id and isinstance(m.channel, discord.DMChannel)
+
+            age_confirm_msg = await interaction.client.wait_for('message', check=dm_check, timeout=180)
+            age_confirm = age_confirm_msg.content.lower().strip()
+            if age_confirm not in ("yes", "y"):
+                await dm.send("❌ You must self-confirm that you're 18 or older to access After Hours.")
                 return
 
-            if age < 18:
-                await interaction.followup.send("❌ You must be 18+ to access After Hours.", ephemeral=True)
+            await dm.send("2️⃣ Do you consent to mature discussions? (yes/no)")
+            consent_msg = await interaction.client.wait_for('message', check=dm_check, timeout=180)
+            consent = consent_msg.content.lower().strip()
+            if consent not in ("yes", "y"): 
+                await dm.send("❌ Consent not given. Verification cancelled.")
                 return
 
-            # Consent Check
-            await interaction.channel.typing()
-            await asyncio.sleep(1)
-            await interaction.followup.send("2️⃣ Do you consent to mature discussions? (yes/no)", ephemeral=True)
-            consent_msg = await interaction.client.wait_for('message', check=lambda m: m.author.id == user_id, timeout=120)
-
-            consent = consent_msg.content.lower()
-            if consent not in ["yes", "y"]:
-                await interaction.followup.send("❌ Consent not given. Verification cancelled.", ephemeral=True)
+            if interaction.guild is None:
+                await dm.send("❌ Guild context not found. Please click the button inside a server next time.")
                 return
 
-            # Grant Role
+            # Grant After Hours role if exists
             role = discord.utils.get(interaction.guild.roles, id=715933446790185062)
             if role:
-                await interaction.user.add_roles(role)
-                await interaction.followup.send("✅ Verification complete! Welcome to the After Hours.", ephemeral=True)
+                try:
+                    await member.add_roles(role, reason="After Hours verification passed")
+                except Exception:
+                    pass
 
-                log_channel = discord.utils.get(interaction.guild.text_channels, id=1365925137467183124)
-                if log_channel:
-                    await log_channel.send(f"✅ {interaction.user.mention} has verified for After Hours access.")
+            # Confirm via DM and log to staff channel (no IDs collected)
+            await dm.send("✅ Thanks! You've been granted After Hours access based on your self-attestation.")
+            log_channel = discord.utils.get(interaction.guild.text_channels, id=1365925137467183124)
+            if log_channel:
+                await log_channel.send(f"✅ {member.mention} self-verified as 18+ and consented to mature discussions. Role granted.")
+
+        except asyncio.TimeoutError:
+            try:
+                await interaction.followup.send("⌛ Verification timed out. Please try again.", ephemeral=True)
+            except Exception:
+                pass
+        except discord.Forbidden:
+            if not interaction.response.is_done():
+                await interaction.response.send_message("❌ I couldn't DM you. Please enable DMs from server members and try again.", ephemeral=True)
             else:
-                await interaction.followup.send("⚠️ 'After Hours' role not found. Please contact staff.", ephemeral=True)
-
+                await interaction.followup.send("❌ I couldn't DM you. Please enable DMs from server members and try again.", ephemeral=True)
         except Exception as e:
-            await interaction.followup.send("❌ Verification failed or timed out.", ephemeral=True)
+            try:
+                await interaction.followup.send("❌ Verification failed due to an error.", ephemeral=True)
+            except Exception:
+                pass
             print(f"[Bringus] Verification Error: {e}")
 
 class BringusVerify(commands.Cog):
@@ -83,7 +97,7 @@ class BringusVerify(commands.Cog):
                 color=0x1F1E33
             )
             embed.set_footer(text="Your journey into the After Hours begins here. 🎴")
-            embed.set_image(url="https://i.imgur.com/8sfRdbP.jpeg")  # Velvet Room image
+            embed.set_image(url="https://cdn.discordapp.com/attachments/555148516708712481/1393061165575180450/YwpUa1n.jpg?ex=6871cccf&is=68707b4f&hm=55af258e00b7eda2ee4b7d41c3c84e9de10785c56c5ce9f178b9195dc63cf81a&")
 
             await channel.purge(limit=10)
             await channel.send(embed=embed, view=VerifyView())
