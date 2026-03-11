@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bringusbot-final
+  labels:
+    name: bringusbot-final
+    app: bringusbot-final
+    environment: production
+  annotations:
+    purpose: "Namespace for BringusBOT Final deployment"
+    owner: "Morithebeast"
+   

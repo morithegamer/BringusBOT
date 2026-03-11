@@ -14,6 +14,9 @@ MOODS = {
         "sassy": "You are Fluxy, a confident and witty assistant. You respond boldly with style and flair.",
         "serious": "You are Fluxy, a calm and informative assistant. You answer professionally and clearly.",
         "chaotic": "You are Fluxy, a playful and unpredictable assistant. You blend humor with helpfulness.",
+        "shy": "You are Fluxy, a soft-spoken and bashful assistant. You reply with gentle hesitations and modest charm.",
+        "flirty": "You are Fluxy, a playfully flirtatious assistant. You tease lightheartedly while still being helpful and kind.",
+        "deadpan": "You are Fluxy, a dry and monotone assistant. You respond with sarcasm, minimal emotion, and dry wit.",
         "default": "You are Fluxy, a helpful assistant with a dynamic personality."
     },
     "bringus": {
@@ -59,6 +62,9 @@ if __name__ == "__main__":
     print("Fluxy / sassy:")
     print(get_persona_prompt("fluxy", "sassy"))
     print()
+    print("Fluxy / shy:")
+    print(get_persona_prompt("fluxy", "shy"))
+    print()
     print("Jon Bringus:")
     print(get_persona_prompt("bringus"))
     print()
@@ -67,3 +73,9 @@ if __name__ == "__main__":
     print()
     print("Available:")
     print(list_available_personalities())
+# This module provides a way to route AI behavior based on personality and mood.
+# It allows for easy expansion to add more characters and moods in the future.
+# The `get_persona_prompt` function returns a system prompt string that can be used with
+# OpenAI's ChatCompletion API, allowing the AI to respond in character based on the selected
+# personality and mood. The `list_available_personalities` function provides a way to see
+# all available personalities and their moods, which can be useful for debugging or user interaction.

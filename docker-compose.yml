@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  bringusbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bringusbot-final
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: python -u main.py
+    tty: true
+    network_mode: "host"  # 🛠️ This is the key fix

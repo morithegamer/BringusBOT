@@ -27,18 +27,18 @@ async def describe_image(image_bytes: bytes, mood: str = "funny"):
     system_prompt = mood_prompts.get(mood.lower(), mood_prompts["funny"])
 
     payload = {
-        "model": "gpt-4-vision-preview",
+        "model": "gpt-4o",
         "messages": [
             {"role": "system", "content": system_prompt},
             {
                 "role": "user",
                 "content": [
-                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}},
-                    {"type": "text", "text": "What’s in this image?"}
+                    {"type": "text", "text": "Describe this image in a fun but helpful way."},
+                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}}
                 ]
             }
         ],
-        "max_tokens": 500
+        "max_tokens": 300
     }
 
     async with aiohttp.ClientSession() as session:

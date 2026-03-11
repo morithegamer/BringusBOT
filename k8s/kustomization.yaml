@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - 0-bringusbot-final-namespace.yaml
+  - bringusbot-Final-persistentVolumeClaim.yaml
+  - deployment.yaml
+  - rbac.yaml
+  - clusterrole.yaml
+  - ingress.yaml
+  - service.yaml
+# Generated code, do not edit

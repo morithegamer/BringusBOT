@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bringusbot-final
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bringusbot-final
+  template:
+    metadata:
+      labels:
+        app: bringusbot-final
+    spec:
+      containers:
+      - name: bringusbot-final
+        image: bringusbot-final-bringusbot:latest
+        imagePullPolicy: Never
+        workingDir: /app
+        command: ["python", "-u", "main.py"]
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        env:
+        - name: E621_USER_AGENT
+          value: "FluxyBot/1.0 (by Morithebeast on e621)"
+        - name: ENABLE_FLUXY_COMMENTS
+          value: "1"
+        - name: DEBUG
+          value: "True"
+        # Add all other environment variables here
+        volumeMounts:
+        - name: app-volume
+          mountPath: /app
+      volumes:
+      - name: app-volume
+        hostPath:
+          path: "/run/desktop/mnt/host/h/BringusBOT-Final-Fixed/BringusBOT-Final"
+          type: Directory
